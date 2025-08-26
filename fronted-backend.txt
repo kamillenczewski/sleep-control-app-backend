@@ -1,0 +1,53 @@
+export const addDatetime = (userId, data, type, onData=null) =>
+  fetchLink('add_datetime', onData ? onData : _ => null, {userId: userId, data: data, type: type});
+
+export const addSleepSatisfaction = (dateId, percent, onData=null) =>
+  fetchLink('add_sleep_satisfaction', onData ? onData : _ => null, {dateId: dateId, percent: percent});
+
+export const addUser = (name, password, onData=null) =>
+  fetchLink('add_user', onData ? onData : _ => null, {name: name, password: password});
+
+export const addUserOption = (userId, name, value, onData=null) =>
+  fetchLink('add_user_option', onData ? onData : _ => null, {userId: userId, name: name, value: value});
+
+export const createChartData = (userId, unit, valuePrecision, onData=null) =>
+  fetchLink('create_chart_data', onData ? onData : _ => null, {userId: userId, unit: unit, valuePrecision: valuePrecision});
+
+export const createChartDataForUsers = (userIds, unit, valuePrecision, onData=null) =>
+  fetchLink('create_chart_data_for_users', onData ? onData : _ => null, {userIds: userIds, unit: unit, valuePrecision: valuePrecision});
+
+export const createDatetimesForList = (userId, type, onData=null) =>
+  fetchLink('create_datetimes_for_list', onData ? onData : _ => null, {userId: userId, type: type});
+
+export const createDatetimeForList = (id, onData=null) =>
+  fetchLink('create_datetime_for_list', onData ? onData : _ => null, {id: id});
+
+export const deleteDatetime = (id, onData=null) =>
+  fetchLink('delete_datetime', onData ? onData : _ => null, {id: id});
+
+export const generateNote = (userName, dateType, latestDate, onData=null) =>
+  fetchLink('generate_note', onData ? onData : _ => null, {userName: userName, dateType: dateType, latestDate: latestDate});
+
+export const getAllUsers = (onData=null) =>
+  fetchLink('get_all_users', onData ? onData : _ => null, {});
+
+export const getDatetimes = (userId, type, onData=null) =>
+  fetchLink('get_datetimes', onData ? onData : _ => null, {userId: userId, type: type});
+
+export const getDefaultOption = (name, onData=null) =>
+  fetchLink('get_default_option', onData ? onData : _ => null, {name: name});
+
+export const getIdFromName = (name, onData=null) =>
+  fetchLink('get_id_from_name', onData ? onData : _ => null, {name: name});
+
+export const getUserOptions = (userId, onData=null) =>
+  fetchLink('get_user_options', onData ? onData : _ => null, {userId: userId});
+
+export const nameExists = (name, onData=null) =>
+  fetchLink('name_exists', onData ? onData : _ => null, {name: name});
+
+export const requireOption = (userId, name, onData=null) =>
+  fetchLink('require_option', onData ? onData : _ => null, {userId: userId, name: name});
+
+export const validateUser = (name, password, onData=null) =>
+  fetchLink('validate_user', onData ? onData : _ => null, {name: name, password: password});
