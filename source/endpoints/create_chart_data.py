@@ -6,11 +6,11 @@ from extended_list import List
 
 
 
-def getDatetimesFromId(userId, type):
+def getDatetimesFromId(user_id, type):
     data = database \
         .table(DATES_TABLE) \
         .select('user_id,type,datetime') \
-        .eq('user_id', userId) \
+        .eq('user_id', user_id) \
         .eq('type', type) \
         .execute().data   
 
@@ -53,15 +53,15 @@ def createSleepAmountData(wakeupDates, sleeptimeDates, unit='H', valuePrecision=
     return data
 
 
-def execute(userId, unit, valuePrecision):
-    wakeupDates = getDatetimesFromId(userId, 'wakeup')
-    sleeptimeDates = getDatetimesFromId(userId, 'sleeptime')
-    chartData = createSleepAmountData(wakeupDates, sleeptimeDates, unit, valuePrecision)
+def execute(user_id, unit, value_precision):
+    wakeupDates = getDatetimesFromId(user_id, 'wakeup')
+    sleeptimeDates = getDatetimesFromId(user_id, 'sleeptime')
+    chartData = createSleepAmountData(wakeupDates, sleeptimeDates, unit, value_precision)
     return chartData
 
 def endpoint():
     args, isAnyNull = getArgs(
-        names=['userId', 'unit', 'valuePrecision'], 
+        names=['user_id', 'unit', 'value_precision'], 
         conversions=[int, None, int]
     )
 

@@ -13,8 +13,6 @@ def execute(name):
 def endpoint():
     args, isAnyNull = getArgs(
         names=['name'], 
-        defaults=None,
-        conversions=None
     )
 
     if isAnyNull:

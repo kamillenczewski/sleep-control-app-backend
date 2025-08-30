@@ -12,7 +12,6 @@ def execute(id):
 def endpoint():
     args, isAnyNull = getArgs(
         names=['id'], 
-        defaults=None,
         conversions=[int]
     )
     

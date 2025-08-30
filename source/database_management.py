@@ -1,7 +1,7 @@
 from supabase import create_client
-from tools import getSecret
+from secret_loader import SecretLoader
 
 URL = 'https://bizxorgumhvaklsooapa.supabase.co'
-KEY = getSecret('DATABASE_KEY')
+KEY = SecretLoader.get('DATABASE_KEY')
 
 database = create_client(URL, KEY)

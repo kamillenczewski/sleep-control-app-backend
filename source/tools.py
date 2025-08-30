@@ -1,18 +1,24 @@
 from flask import request
 from os.path import join
-from constants import MAIN_PATH, LOG_PATH, SECRET_PATH
-from dotenv import load_dotenv
-from os import getenv
+from constants import MAIN_PATH, LOG_PATH
+from datetime import datetime
 
-# defaults to remove, check references
-def getArgs(names, defaults=None, conversions=None):
-    if not isinstance(defaults, list):
-        defaults = [defaults for _ in names]
+def getArgsFromGETRequest(names):
+    return [request.args.get(name, None) for name in names]
+
+def getArgsFromPOSTRequest(names):
+    data = request.get_json()
+    data = [data.get(name) for name in names]
+    return data
+
+def getArgs(names, conversions=None, methods=None):
+    if methods and methods[0] == 'POST':
+        values = getArgsFromPOSTRequest(names)
+    else:
+        values = getArgsFromGETRequest(names)
 
     if not isinstance(conversions, list):
         conversions = [conversions for _ in names]
-
-    values = [request.args.get(name, defaultValue) for name, defaultValue in zip(names, defaults)]
 
     isAnyNull = any(value == None for value in values)
 
@@ -22,6 +28,7 @@ def getArgs(names, defaults=None, conversions=None):
     values = [conversion(value) if conversion else value for value, conversion in zip(values, conversions)]
 
     return values, isAnyNull
+        
 
 def returnList(func):
     def _(*args, **kwargs):
@@ -50,12 +57,11 @@ def logEndpoints(app, destination):
         for rule in app.url_map.iter_rules():
             file.write(f"{rule.endpoint}: {rule.rule}\n")
 
-def log(text):
+def log(*parts):
+    preText = datetime.now().__str__()
+
     with open(LOG_PATH, 'a+') as file:
-        file.write(text + '\n')
+        file.write(preText + ' ' + ' '.join(map(str, parts)) + '\n')
 
-def loadSecret():
-    load_dotenv(SECRET_PATH)
-
-def getSecret(name):
-    return getenv(name)
+def printList(items):
+    print('\n'.join(map(str, items)))

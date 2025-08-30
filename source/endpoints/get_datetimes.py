@@ -4,11 +4,11 @@ from constants import DATES_TABLE, DATETIME_FORMAT
 from extended_list import List
 from datetime import datetime
 
-def execute(userId, type):
+def execute(id, type):
     data = database \
         .table(DATES_TABLE) \
         .select('user_id,type,datetime') \
-        .eq('user_id', userId) \
+        .eq('user_id', id) \
         .eq('type', type) \
         .execute().data   
     
@@ -20,7 +20,6 @@ def execute(userId, type):
 def endpoint():
     args, isAnyNull = getArgs(
         names=['id', 'type'], 
-        defaults=None,
         conversions=[int, None]
     )
     

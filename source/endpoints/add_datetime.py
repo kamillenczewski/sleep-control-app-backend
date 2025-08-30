@@ -2,16 +2,15 @@ from tools import getArgs
 from database_management import database
 from constants import DATES_TABLE
 
-def execute(userId, data, type):
+def execute(user_id, data, type):
     return database \
         .table(DATES_TABLE) \
-        .insert({'user_id': userId, 'datetime': data, 'type': type}) \
+        .insert({'user_id': user_id, 'datetime': data, 'type': type}) \
         .execute().data[0]  
 
 def endpoint():
     args, isAnyNull = getArgs(
-        names=['userId', 'datetime', 'type'], 
-        defaults=None,
+        names=['user_id', 'datetime', 'type'], 
         conversions=[int, None, None]
     )
     

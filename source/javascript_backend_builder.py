@@ -11,7 +11,7 @@ def removeUnderscoresFromEndpoint(endpointName):
 def createBackendEndpointsInFrontend(modules, endpoints):
     for module, endpoint in zip(modules, endpoints):
         endpointName = removeUnderscoresFromEndpoint(endpoint)
-        argNames = [removeUnderscoresFromEndpoint(name) for name, _ in signature(module.execute).parameters.items()]
+        argNames = [name for name, _ in signature(module.execute).parameters.items()]
     
         jsArgs = '{' + ', '.join([arg + ': ' + arg for arg in argNames]) + '}'
 

@@ -11,7 +11,7 @@ TOKEN = getenv('PYTHONANYWHERE_TOKEN')
 MAIN_URL = f"https://www.pythonanywhere.com/api/v0/user/{USERNAME}/"
 MAIN_REMOTE_FOLDER = 'mysite'
 ZIP_FOLDER = MAIN_REMOTE_FOLDER + '.zip'
-LOCAL_MAIN_FOLDER = 'backend'
+LOCAL_MAIN_FOLDER = 'source'
 
 def zipFolder(source, destination):
     make_archive(destination.replace(".zip", ""), "zip", source)

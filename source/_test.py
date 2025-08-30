@@ -1,15 +1,31 @@
-from tools import getArgs
 from database_management import database
-from constants import USER_OPTIONS_TABLE
+from endpoints.get_all_options import execute as getAllOptions
+from tools import getArgs
 
 def execute(user_id):
-    data = database \
-        .table(USER_OPTIONS_TABLE) \
-        .select('name,value') \
-        .eq('user_id', user_id) \
-        .execute().data
+    defaultOptions = getAllOptions()
 
-    data = {record['key']: record['value'] for record in data}
+    actualOptions = (
+        database
+            .table('users_and_options')
+            .select('*')
+            .eq('user_id', user_id)
+            .execute().data
+    )
+    actualOptions = {
+        record['option_id']: record
+        for record 
+        in actualOptions
+    }
+
+    data = [
+        {
+            **record, 
+            'value': actualOptions[record['option_id']]['value'] if record['option_id'] in actualOptions else None
+        } 
+        for record 
+        in defaultOptions
+    ]
 
     return data
 
@@ -23,4 +39,6 @@ def endpoint():
         return
 
     return execute(*args)
-print(execute(18))
+
+
+print(execute(16))

@@ -7,8 +7,8 @@ def labelSortingKey(label):
 
     return month*100 + day
 
-def execute(userIds, unit, valuePrecision):
-    data = [createChartData(userId, unit, valuePrecision) for userId in userIds]
+def execute(user_ids, unit, value_precision):
+    data = [createChartData(userId, unit, value_precision) for userId in user_ids]
 
     labels = set()
     labelsAndIndexes = dict()
@@ -43,7 +43,7 @@ def readIdsString(ids: str):
 
 def endpoint():
     args, isAnyNull = getArgs(
-        names=['userIds', 'unit', 'valuePrecision'], 
+        names=['user_ids', 'unit', 'value_precision'], 
         conversions=[readIdsString, None, int]
     )
 

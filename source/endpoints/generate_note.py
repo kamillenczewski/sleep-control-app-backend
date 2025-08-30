@@ -15,8 +15,8 @@ def composePrompt(userName, dateType, latestDate, data):
         Different data: {data}.
     """
 
-def execute(userName, dateType, latestDate):
-    prompt = composePrompt(userName, dateType, latestDate, data)
+def execute(username, date_type, latest_date):
+    prompt = composePrompt(username, date_type, latest_date, data)
     note = generateContent(prompt)
     return note
 
@@ -24,9 +24,7 @@ def execute(userName, dateType, latestDate):
 
 def endpoint():
     args, isAnyNull = getArgs(
-        names=['userName', 'dateType', 'latestDate'], 
-        defaults=None,
-        conversions=None
+        names=['username', 'date_type', 'latest_date'], 
     )
     
     if isAnyNull:

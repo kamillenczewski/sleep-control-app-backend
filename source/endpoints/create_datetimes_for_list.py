@@ -4,11 +4,11 @@ from constants import DATETIME_FORMAT, DATES_TABLE
 from database_management import database
 from extended_list import List
 
-def getDatetimesAndIdsFromUserId(userId, type):
+def getDatetimesAndIdsFromUserId(user_id, type):
     data = database \
         .table(DATES_TABLE) \
         .select('id,user_id,type,datetime') \
-        .eq('user_id', userId) \
+        .eq('user_id', user_id) \
         .eq('type', type) \
         .execute().data   
     
@@ -17,19 +17,18 @@ def getDatetimesAndIdsFromUserId(userId, type):
 
     return dates
 
-def execute(userId, type):
+def execute(user_id, type):
     def convert(record):
         return {
             'id': record['id'],
             'datetime': datetime.strptime(record['datetime'], DATETIME_FORMAT).strftime('%d/%m/%Y %H'),
         }
 
-    return [convert(record) for record in getDatetimesAndIdsFromUserId(userId, type)]
+    return [convert(record) for record in getDatetimesAndIdsFromUserId(user_id, type)]
 
 def endpoint():
     args, isAnyNull = getArgs(
-        names=['userId', 'type'], 
-        defaults=None,
+        names=['user_id', 'type'], 
         conversions=[int, None]
     )
     

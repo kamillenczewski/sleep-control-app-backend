@@ -13,7 +13,6 @@ def execute(name, password):
 def endpoint():
     args, isAnyNull = getArgs(
         names=['name', 'password'], 
-        defaults=None,
         conversions=None
     )
     

@@ -4,7 +4,7 @@ from uuid import uuid4
 from os import listdir
 from os.path import join
 from importlib.util import spec_from_file_location, module_from_spec
-from tools import writeFile
+from tools import writeFile, log
 
 def writeDict(path, dictionary):
     lines = []
@@ -57,7 +57,9 @@ class EndpointRegistry:
         if isinstance(methods, str):
             methods = [methods]
 
-        self.app.route(self.createLink(linkElements), methods=methods)(createFunction(lambda: createResponse(resultMethod())))
+        self.app.route(self.createLink(linkElements), methods=methods)(
+            createFunction(lambda: createResponse(resultMethod()))
+        )
 
     def registerEndpointsFromFolder(self, path, skip=['__pycache__']):
         for fileName in listdir(path):
@@ -74,7 +76,10 @@ class EndpointRegistry:
 
             if not hasattr(module, 'endpoint'):
                 continue
-        
-            self.registerEndpoint(moduleName, module.endpoint)
+            
+            
+            methods = module.methods if hasattr(module, 'methods') else None
+            log(methods)
+            self.registerEndpoint(moduleName, module.endpoint, methods)
             self.modules.append(module)
             self.endpoints.append(moduleName)
