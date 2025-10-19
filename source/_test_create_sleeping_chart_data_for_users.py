@@ -1,4 +1,4 @@
-from endpoints.create_chart_data import execute as createChartData
+from endpoints.create_sleeping_chart_data import execute as createChartData
 from tools import getArgs
 
 def labelSortingKey(label):
@@ -7,8 +7,8 @@ def labelSortingKey(label):
 
     return month*100 + day
 
-def execute(user_ids, unit, value_precision):
-    data = [createChartData(userId, unit, value_precision) for userId in user_ids]
+def execute(user_ids, value_precision=0):
+    data = [createChartData(userId, value_precision) for userId in user_ids]
 
     labels = set()
     labelsAndIndexes = dict()
@@ -26,7 +26,9 @@ def execute(user_ids, unit, value_precision):
                 labelsAndIndexes[label] = labelIndex
                 newData.append({'label': label, 'other': []})
             
-            newData[labelIndex]['other'].append({'userIndex': userIndex, 'value': record['value'], 'extraValue': record['extraValue'], 'satisfactionPercent': record['satisfactionPercent']})
+            record = {'userIndex': userIndex, 'value': record['value'], 'extraValue': record['extraValue'], 'satisfaction': record['satisfaction']}
+
+            newData[labelIndex]['other'].append(record)
 
     return newData
 
@@ -43,11 +45,13 @@ def readIdsString(ids: str):
 
 def endpoint():
     args, isAnyNull = getArgs(
-        names=['user_ids', 'unit', 'value_precision'], 
-        conversions=[readIdsString, None, int]
+        names=['user_ids', 'value_precision'], 
+        conversions=[readIdsString, int]
     )
 
     if isAnyNull:
         return
 
     return execute(*args)
+
+print(execute([16,18]))

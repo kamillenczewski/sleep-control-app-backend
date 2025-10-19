@@ -1,22 +1,22 @@
 from tools import getArgs
 from database_management import database
 
-# option_id, user_id, value
+# owner_id, option_user_id, color, is_active
 def execute(user_id, options):
     optionsWithUserId = [
         {
-            'user_id': user_id, 
-            'option_id': option['option_id'],
-            'value': option['value']
+            'owner_id': user_id, 
+            'option_user_id': option['userId'],
+            'color': option['hexColor'],
+            'is_active': option['isActive'],
         } 
         for option 
         in options
-        if option['value'] is not None
     ]
 
     data = (
         database
-            .table('users_and_options')
+            .table('bar_color_options')
             .upsert(optionsWithUserId)
             .execute().data
     )
@@ -24,7 +24,6 @@ def execute(user_id, options):
     return data
 
     
-
 methods = [
     'POST'
 ]
@@ -40,4 +39,3 @@ def endpoint():
         return
 
     return execute(*args)
-

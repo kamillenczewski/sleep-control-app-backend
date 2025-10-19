@@ -1,62 +1,48 @@
 from google_sheets_api import get
-from tools import transpose
+from tools import returnList
 
-USERS_RANGE = 'Ogólnie!2:2'
-DATETIMES_RANGE = 'Ogólnie!C4:L'
+SHEET_NAME = 'Main'
+USERS_RANGE = f'{SHEET_NAME}!1:1'
+DATETIMES_RANGE = f'{SHEET_NAME}!A3:J'
 
 def getUsers():
     return [name.strip() for name in get(USERS_RANGE)[0] if name.strip() != '']
 
-def countBeginEmptyStrings(array):
-    counter = 0
 
-    for item in array:
-        if item.strip() != '':
-            break
-
-        counter += 1
-
-    return counter
-
-# def normalizeDates(dates): 
-#     return [date.ljust('') for date in dates]
-
-def exportDates():
-    table = get(DATETIMES_RANGE)
-    users = getUsers()
+def transpose(table):
     maxLength = len(max(*table, key=len))
 
-    for subArray in table:
-        if len(subArray) < maxLength:
-            subArray.extend([''] * (maxLength - len(subArray)))
+    for row in table:
+        if len(row) < maxLength:
+            row.extend([''] * (maxLength - len(row)))
 
+    table = [[row[i] for row in table] for i in range(len(table[0]))]
+    table = [[item for item in column if item.strip() != ''] for column in table]
+
+    return table
+
+@returnList
+def exportDates_():
+    table = get(DATETIMES_RANGE)
+    users = getUsers()
+    
     table = transpose(table)
 
-    wakeUpColumns = table[::2]
-    sleepColumns = table[1::2]
+    sleepColumns = table[::2]
+    wakeUpColumns = table[1::2]
+            
 
     for user, wakeupDatesList, sleepDatesList in zip(users, wakeUpColumns, sleepColumns):
-        if countBeginEmptyStrings(wakeupDatesList) == countBeginEmptyStrings(sleepDatesList):
-            wakeupDatesList.pop(0)
+        maxIndex = min(len(wakeupDatesList), len(sleepDatesList))
 
-    wakeUpColumns = [[item for item in column if item.strip() != ''] for column in wakeUpColumns]
-    sleepColumns = [[item for item in column if item.strip() != ''] for column in sleepColumns]
-
-    array = []
-
-    for user, wakeupDatesList, sleepDatesList in zip(users, wakeUpColumns, sleepColumns):
-        if len(wakeupDatesList) > len(sleepDatesList):
-            wakeupDatesList.pop(0)
-        elif len(sleepDatesList) > len(wakeupDatesList):
-            sleepDatesList.pop()
-
-        array.append({'user': user, 'wakeup': wakeupDatesList, 'sleeptime': sleepDatesList})
-
-    return array
-
+        yield {
+            'user': user, 
+            'wakeup': wakeupDatesList[:maxIndex], 
+            'sleeptime': sleepDatesList[:maxIndex]
+        }
 
 if __name__ == '__main__':
     from tools import writeFile
     from json import dumps
 
-    writeFile('export_output.json', dumps(dict(array=exportDates()), ensure_ascii=False))
+    writeFile('export_output.json', dumps(dict(array=exportDates_()), ensure_ascii=False))

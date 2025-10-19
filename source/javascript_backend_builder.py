@@ -8,8 +8,8 @@ def removeUnderscoresFromEndpoint(endpointName):
     return newName
 
 @returnList
-def createBackendEndpointsInFrontend(modules, endpoints):
-    for module, endpoint in zip(modules, endpoints):
+def createBackendEndpointsInFrontend(modules, endpoints, methods):
+    for module, endpoint, method in zip(modules, endpoints, methods):
         endpointName = removeUnderscoresFromEndpoint(endpoint)
         argNames = [name for name, _ in signature(module.execute).parameters.items()]
     
@@ -18,9 +18,9 @@ def createBackendEndpointsInFrontend(modules, endpoints):
         argNames += ['onData=null']
 
         head = f"export const {endpointName} = ({', '.join(argNames)}) =>"
-        body = f"  fetchLink('{endpoint}', onData ? onData : _ => null, {jsArgs});"
+        body = f"  fetchLink{method}('{endpoint}', onData ? onData : _ => null, {jsArgs});"
 
         yield head + '\n' + body
     
-def createBackendInFrontend(modules, endpoints):
-    return '\n\n'.join([func for func in createBackendEndpointsInFrontend(modules, endpoints)])
+def createBackendInFrontend(modules, endpoints, methods):
+    return '\n\n'.join([func for func in createBackendEndpointsInFrontend(modules, endpoints, methods)])

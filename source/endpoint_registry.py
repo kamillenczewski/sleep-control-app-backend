@@ -43,6 +43,7 @@ class EndpointRegistry:
         self.endpointSuffix = 'Endpoint'
         self.modules = []
         self.endpoints = []
+        self.methods = []
 
     def createLink(self, linkElements):
         return self.linkSeparator + self.linkSeparator.join(linkElements)
@@ -79,7 +80,9 @@ class EndpointRegistry:
             
             
             methods = module.methods if hasattr(module, 'methods') else None
-            log(methods)
+
             self.registerEndpoint(moduleName, module.endpoint, methods)
+
             self.modules.append(module)
             self.endpoints.append(moduleName)
+            self.methods.append(methods[0] if methods else 'GET')

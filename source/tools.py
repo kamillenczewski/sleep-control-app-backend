@@ -36,10 +36,6 @@ def returnList(func):
     
     return _
 
-@returnList
-def transpose(matrix):
-    for i in range(len(matrix[0])):
-        yield [row[i] for row in matrix]
 
 def writeFile(path, content):
     with open(path, 'w', encoding='utf-8') as file:
